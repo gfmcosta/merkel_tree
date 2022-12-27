@@ -5,6 +5,7 @@
 package merkeltree;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -103,8 +104,20 @@ public class MerkelTree {
         return hashFinal;
     }
     void show(){
-        System.out.println(elements);
-        for(ArrayList a:tree)
-            System.out.println(a);
+        Collections.reverse(tree);
+        int cont=tree.size()+1;
+        for(ArrayList a:tree){
+            cont-=1;
+            for (Object b:a){
+                for (int i = 0; i <cont; i++) {
+                    System.out.print("\t");
+                }
+                System.out.print(b);
+            }   
+            System.out.println("");
+        }
+            
+        //System.out.println(elements);
+        Collections.reverse(tree);
     }
 }
