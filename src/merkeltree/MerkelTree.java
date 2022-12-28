@@ -13,16 +13,30 @@ import java.util.Collections;
  */
 public class MerkelTree {
     
+    /**
+     *
+     */
     public ArrayList<String> elements;
+
+    /**
+     *
+     */
     public ArrayList<ArrayList<String>> tree;
-    int cont = 0;
-   
+     
+    /**
+     * Constructor
+     */
     public MerkelTree(){
         elements = new ArrayList<>();
         tree=new ArrayList<>();
         tree.add(new ArrayList<>());
     }
-    
+   /**
+    * Replace an element in a specific index
+    *
+    * @param index  the index of the element
+    * @param car    the new caracter
+    */ 
     public void replace(int index,String car){
         elements.set(index, car);
         String x= hash(car);
@@ -32,6 +46,11 @@ public class MerkelTree {
         }
     }
     
+    /**
+    * Remove an element in a specific index
+    *
+    * @param index  the index of the element
+    */ 
     public void remove(int index){
         elements.remove(index);
         tree.get(0).remove(index);
@@ -39,6 +58,12 @@ public class MerkelTree {
             reorganiza();
         }
     }
+    
+    /**
+    * Add an element to tree
+    *
+    * @param e   the caracter to add
+    */ 
     public void add(String e){
         ArrayList<ArrayList<String>> tree2= new ArrayList<>();
         elements.add(e);
@@ -75,6 +100,9 @@ public class MerkelTree {
         }
     }
     
+    /**
+    * Re-order the tree
+    */ 
     public void reorganiza(){
         ArrayList<ArrayList<String>> tree3= new ArrayList<>();
         tree3.add(tree.get(0));
@@ -99,23 +127,34 @@ public class MerkelTree {
                 }
         this.tree=tree3;
     }
+    
+    /**
+    * Return the hash of a determnate String
+    *
+    * @param e    the string to hash
+    * @return     String hashed
+    */ 
     public String hash(String e){
         int hashInt = e.hashCode();
         String hashFinal = Integer.toHexString(hashInt);
         return hashFinal;
     }
+    
+    /**
+    * Return the Tree in Text
+    * @return     tree in String
+    */ 
     public String show(){
         Collections.reverse(tree);
         String retorno="";
         for(ArrayList a:tree){
-            cont-=1;
             for (Object b:a){
                 retorno+=b+" ";
-            }   
+            }
             retorno+="\n";
         }
         for (Object a:elements)
-            retorno+=a+" ";
+            retorno+=a+"  ";
         Collections.reverse(tree);
         return retorno;
     }

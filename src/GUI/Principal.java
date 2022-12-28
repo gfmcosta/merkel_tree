@@ -317,65 +317,60 @@ public class Principal extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
 
-       
+        //cria uma instancia do tipo JFileChooser
         JFileChooser fileChooser = new JFileChooser();
+        //cria uma instancia do tipo FileNameExtensionFilter para criar um filtro, e limita para ficheiros do tipo mkt
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Merkel Tree file", "mkt");
-//        fileChooser.showOpenDialog(this);
-//        System.out.println("File to open: " + fileChooser.getSelectedFile());
+        //determina que so sao aceites os ficheiros com o tipo do filtro
         fileChooser.setAcceptAllFileFilterUsed(false);
+        //adiciona o filtro ao jFileChooser
         fileChooser.addChoosableFileFilter(filter);
+        //abre o jFileChooser
         fileChooser.showSaveDialog(this);
+        //cria uma instancia do tipo FIle
         File renamed2;
+        //verifica se foi escolhido um ficheiro no JFileChooser
         if(fileChooser.getSelectedFile()!=null){
+            //foi escolhido um ficheiro
+            //verifica se o ficheiro contem a extensao .mkt
             if(!fileChooser.getSelectedFile().toString().contains(".mkt")){
+                //significa que nao contem
+                //cria um ficheiro novo com a extensao .mkt
                 File renamed = new File(fileChooser.getSelectedFile().toString()+".mkt");
+                //cria um ficheiro secundarioo para guaradar mais tarde o array de elementos
                 renamed2 =new File(fileChooser.getSelectedFile().toString()+".mkt.elements");
+                //define o fileChooser com o novo ficheiro
                 fileChooser.setSelectedFile(renamed);
             }
+            //cria um ficheiro secundarioo para guaradar mais tarde o array de elementos
             renamed2 =new File(fileChooser.getSelectedFile().toString()+".elements");
             System.out.println("File to save: " + fileChooser.getSelectedFile());
+            //cria um ficheiro com o contido no fileChooser (=renamed)
             File file = fileChooser.getSelectedFile();
             try {
+                //cria e verifica se foi executado com suceso
                 if(file.createNewFile()){
                     System.out.println("Ficheiro criado com sucesso.");
                     
                 }else{
+                    //significa que o ficheiro ja existe e por isso apaga o anterior e cria um novo
                     System.out.println("Ficheiro ja existe");
                     file.delete();
                     file.createNewFile();
                 }
+                //cria o ficheiro secundario e verifica se foi executado com suceso
                 if(renamed2.createNewFile()){
                     System.out.println("Ficheiro criado com sucesso.");
                     
                 }else{
+                    //significa que o ficheiro ja existe e por isso apaga cria o ficheiro secundario novamente
                     System.out.println("Ficheiro ja existe");
                     file.delete();
                     file.createNewFile();
                 }
-//                FileWriter mw = new FileWriter(file);
-//                Collections.reverse(mt.tree);
-//                for (ArrayList a:mt.tree){
-//                    for(Object b:a){
-//                        if(b== a.get(a.size()-1)){
-//                            mw.write(b.toString());
-//                        }else{
-//                            mw.write(b+",");
-//                        }
-//                        
-//                    }
-//                    mw.write("\n");
-//                }
-//                    mw.write("\n");
-//                    for(Object a:mt.elements){
-//                        if(a== mt.elements.get(mt.elements.size()-1)){
-//                            mw.write(a.toString());
-//                        }else{
-//                            mw.write(a+",");
-//                        }
-//                    }
-//                Collections.reverse(mt.tree);
-//                mw.close();
+                //Escreve em formato de objeto no ficheiro principal a arvore
                 ObjectIO.writeObject(mt.tree, fileChooser.getSelectedFile().toString());
+                //Escreve em formato de objeto no ficheiro secundario os elementos da arvore
                 ObjectIO.writeObject(mt.elements, renamed2.getAbsolutePath());
                 System.out.println("Ficheiro escrito com sucesso");
             } catch (IOException ex) {
@@ -390,17 +385,28 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        //cria uma instancia do tipo JFileChooser
         JFileChooser fileChooser = new JFileChooser();
+        //cria uma instancia do tipo FileNameExtensionFilter para criar um filtro, e limita para ficheiros do tipo mkt
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Merkel Tree file", "mkt");
+        //determina que so sao aceites os ficheiros com o tipo do filtro
         fileChooser.setAcceptAllFileFilterUsed(false);
+        //adiciona o filtro ao jFileChooser
         fileChooser.addChoosableFileFilter(filter);
+        //abre o jFileChooser
         fileChooser.showOpenDialog(this);
+        //guarda na arvore o conteudo do ficheiro principal
         mt.tree=(ArrayList<ArrayList<String>>)ObjectIO.readObject(fileChooser.getSelectedFile().toString());
+        //guarda nos elementos o conteudo do ficheiro secundarioo
         mt.elements=(ArrayList<String>) ObjectIO.readObject(fileChooser.getSelectedFile().toString()+".elements");
         System.out.println("File to open: " + fileChooser.getSelectedFile());
+        //limpa a area de texto
         jTextPane1.setText("");
+        //escreve a arvore no painel de texto
         jTextPane1.setText(mt.show());
+        //limpa o model (jList)
         model.removeAllElements();
+        //adiciona todos os elementos ao model (jList)
         model.addAll(mt.elements);
     }//GEN-LAST:event_jButton5ActionPerformed
 
