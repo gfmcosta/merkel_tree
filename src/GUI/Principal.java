@@ -5,34 +5,64 @@
 package GUI;
 
 import java.awt.Image;
+import java.awt.TextField;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JList;
+import javax.swing.ListModel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import merkeltree.MerkelTree;
+import merkeltree.ObjectIO;
 
 /**
  *
  * @author gonca
  */
 public class Principal extends javax.swing.JFrame {
-
+    //cira um objeto para servir de "Array" de elementos para a lista
+    DefaultListModel<String> model = new DefaultListModel<>();
+    //cria uma instancia da classe Merkel Tree
+    MerkelTree mt = new MerkelTree();
     /**
      * Creates new form Principal
      */
     public Principal() {
         initComponents();
+        //adiciona icon ao botao
         ImageIcon i = new javax.swing.ImageIcon(getClass().getResource("/resources/adicionar-ficheiro.png"));
         Image img = i.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         jButton1.setIcon(new ImageIcon(img));
+        //adiciona icon ao botao
         i = new javax.swing.ImageIcon(getClass().getResource("/resources/delete.png"));
         img = i.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         jButton2.setIcon(new ImageIcon(img));
+        //adiciona icon ao botao
         i = new javax.swing.ImageIcon(getClass().getResource("/resources/change.png"));
         img = i.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         jButton3.setIcon(new ImageIcon(img));
+        //adiciona icon ao botao
         i = new javax.swing.ImageIcon(getClass().getResource("/resources/save-file.png"));
         img = i.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         jButton4.setIcon(new ImageIcon(img));
+        //adiciona icon ao botao
         i = new javax.swing.ImageIcon(getClass().getResource("/resources/read-file.png"));
         img = i.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         jButton5.setIcon(new ImageIcon(img));
+        //define o model da jList
+        jList1.setModel(model);
+
+       
+        
     }
 
     /**
@@ -53,6 +83,11 @@ public class Principal extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -133,7 +168,7 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 45, Short.MAX_VALUE))
+                .addGap(0, 25, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,15 +179,43 @@ public class Principal extends javax.swing.JFrame {
             .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jList1);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setText("Elementos");
+
+        jTextPane1.setEditable(false);
+        jScrollPane2.setViewportView(jTextPane1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 837, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -162,7 +225,13 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(323, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         pack();
@@ -173,29 +242,193 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+            //verifica se o textField esta vazio
+            if(!jTextField1.getText().isBlank()){
+                //significa que está
+                //adiciona o elemento ao model (jList)
+                model.addElement(jTextField1.getText());
+                //adiciona o elemento a arvore
+                mt.add(jTextField1.getText());
+                //limpa o textField
+                jTextField1.setText("");
+                //muda o index para -1 (nao selecionado)
+                jList1.setSelectedIndex(-1);
+                //requer o foco novamente
+                jTextField1.requestFocus();
+                //limpar o textPanel
+                jTextPane1.setText("");
+                //mostrar nova arvore
+                jTextPane1.setText(mt.show());
+            }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        //verifica se esta algum valor selecionado na jList
+        if(jList1.getSelectedIndex()!=-1){
+            //significa que está
+            //guarda o index do valor selecionado da lista em index
+            int index=jList1.getSelectedIndex();
+            //remove o elemento ao model (jList)
+            model.remove(index);
+            //remove o elemento da arvore
+            mt.remove(index);
+            //limpa o textField
+            jTextField1.setText("");
+            //muda o index para -1 (nao selecionado)
+            jList1.setSelectedIndex(-1);
+            //requer o foco novamente
+            jTextField1.requestFocus();
+            //limpar o textPanel
+            jTextPane1.setText("");
+            //mostrar nova arvore
+            jTextPane1.setText(mt.show());
+        }
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        //verifica se esta algum valor selecionado na jList
+        if(jList1.getSelectedIndex()!=-1){
+            //significa que está
+            //verifica se o textField esta vazio 
+            if(!jTextField1.getText().isBlank() && !jTextField1.getText().equals(jList1.getSelectedValue())){
+                //significa que está
+                //guarda o index do valor selecionado da lista em index
+                int index=jList1.getSelectedIndex();
+                String car =jTextField1.getText();
+                //remove o elemento ao model (jList)
+                model.remove(index);
+                model.add(index, car);
+                //remove o elemento da arvore
+                mt.replace(index,car);
+                //limpa o textField
+                jTextField1.setText("");
+                //muda o index para -1 (nao selecionado)
+                jList1.setSelectedIndex(-1);
+                //requer o foco novamente
+                jTextField1.requestFocus();
+                //limpar o textPanel
+                jTextPane1.setText("");
+                //mostrar nova arvore
+                jTextPane1.setText(mt.show());
+            }
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+
+       
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Merkel Tree file", "mkt");
+//        fileChooser.showOpenDialog(this);
+//        System.out.println("File to open: " + fileChooser.getSelectedFile());
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.addChoosableFileFilter(filter);
+        fileChooser.showSaveDialog(this);
+        File renamed2;
+        if(fileChooser.getSelectedFile()!=null){
+            if(!fileChooser.getSelectedFile().toString().contains(".mkt")){
+                File renamed = new File(fileChooser.getSelectedFile().toString()+".mkt");
+                renamed2 =new File(fileChooser.getSelectedFile().toString()+".mkt.elements");
+                fileChooser.setSelectedFile(renamed);
+            }
+            renamed2 =new File(fileChooser.getSelectedFile().toString()+".elements");
+            System.out.println("File to save: " + fileChooser.getSelectedFile());
+            File file = fileChooser.getSelectedFile();
+            try {
+                if(file.createNewFile()){
+                    System.out.println("Ficheiro criado com sucesso.");
+                    
+                }else{
+                    System.out.println("Ficheiro ja existe");
+                    file.delete();
+                    file.createNewFile();
+                }
+                if(renamed2.createNewFile()){
+                    System.out.println("Ficheiro criado com sucesso.");
+                    
+                }else{
+                    System.out.println("Ficheiro ja existe");
+                    file.delete();
+                    file.createNewFile();
+                }
+//                FileWriter mw = new FileWriter(file);
+//                Collections.reverse(mt.tree);
+//                for (ArrayList a:mt.tree){
+//                    for(Object b:a){
+//                        if(b== a.get(a.size()-1)){
+//                            mw.write(b.toString());
+//                        }else{
+//                            mw.write(b+",");
+//                        }
+//                        
+//                    }
+//                    mw.write("\n");
+//                }
+//                    mw.write("\n");
+//                    for(Object a:mt.elements){
+//                        if(a== mt.elements.get(mt.elements.size()-1)){
+//                            mw.write(a.toString());
+//                        }else{
+//                            mw.write(a+",");
+//                        }
+//                    }
+//                Collections.reverse(mt.tree);
+//                mw.close();
+                ObjectIO.writeObject(mt.tree, fileChooser.getSelectedFile().toString());
+                ObjectIO.writeObject(mt.elements, renamed2.getAbsolutePath());
+                System.out.println("Ficheiro escrito com sucesso");
+            } catch (IOException ex) {
+                System.out.println("Ocorreu um erro.");
+                
+                ex.printStackTrace();
+            }
+        }
+        
+        
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Merkel Tree file", "mkt");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.addChoosableFileFilter(filter);
+        fileChooser.showOpenDialog(this);
+        mt.tree=(ArrayList<ArrayList<String>>)ObjectIO.readObject(fileChooser.getSelectedFile().toString());
+        mt.elements=(ArrayList<String>) ObjectIO.readObject(fileChooser.getSelectedFile().toString()+".elements");
+        System.out.println("File to open: " + fileChooser.getSelectedFile());
+        jTextPane1.setText("");
+        jTextPane1.setText(mt.show());
+        model.removeAllElements();
+        model.addAll(mt.elements);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jList1MouseClicked
+
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+        //verifica se outro valor foi escolhido
+        if(jList1.getSelectedIndex()!=-1){
+            //significa que foi
+            //coloca o valor escolhido no textField
+            jTextField1.setText(jList1.getSelectedValue());
+            //requer o foco novamente
+            jTextField1.requestFocus();
+        }else{
+            //significa que nao existe nennhum valor escolhido
+            //limpa o textField
+            jTextField1.setText("");
+        }
+    }//GEN-LAST:event_jList1ValueChanged
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -234,8 +467,14 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables
+
 }

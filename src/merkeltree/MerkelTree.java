@@ -13,8 +13,8 @@ import java.util.Collections;
  */
 public class MerkelTree {
     
-    ArrayList<String> elements;
-    ArrayList<ArrayList<String>> tree;
+    public ArrayList<String> elements;
+    public ArrayList<ArrayList<String>> tree;
     int cont = 0;
    
     public MerkelTree(){
@@ -23,7 +23,7 @@ public class MerkelTree {
         tree.add(new ArrayList<>());
     }
     
-    void replace(int index,String car){
+    public void replace(int index,String car){
         elements.set(index, car);
         String x= hash(car);
         tree.get(0).set(index, x);
@@ -32,14 +32,14 @@ public class MerkelTree {
         }
     }
     
-    void remove(int index){
+    public void remove(int index){
         elements.remove(index);
         tree.get(0).remove(index);
         for (int i = 0; i < tree.size(); i++){
             reorganiza();
         }
     }
-    void add(String e){
+    public void add(String e){
         ArrayList<ArrayList<String>> tree2= new ArrayList<>();
         elements.add(e);
         e = hash(e);
@@ -68,13 +68,14 @@ public class MerkelTree {
                 }
         
         this.tree=tree2;
+        
         //rever com o prof
         for (int i = 0; i < tree.size(); i++){
             reorganiza();
         }
     }
     
-    void reorganiza(){
+    public void reorganiza(){
         ArrayList<ArrayList<String>> tree3= new ArrayList<>();
         tree3.add(tree.get(0));
             for(ArrayList a:tree)
@@ -98,26 +99,24 @@ public class MerkelTree {
                 }
         this.tree=tree3;
     }
-    String hash(String e){
+    public String hash(String e){
         int hashInt = e.hashCode();
         String hashFinal = Integer.toHexString(hashInt);
         return hashFinal;
     }
-    void show(){
+    public String show(){
         Collections.reverse(tree);
-        int cont=tree.size()+1;
+        String retorno="";
         for(ArrayList a:tree){
             cont-=1;
             for (Object b:a){
-                for (int i = 0; i <cont; i++) {
-                    System.out.print("\t");
-                }
-                System.out.print(b);
+                retorno+=b+" ";
             }   
-            System.out.println("");
+            retorno+="\n";
         }
-            
-        //System.out.println(elements);
+        for (Object a:elements)
+            retorno+=a+" ";
         Collections.reverse(tree);
+        return retorno;
     }
 }

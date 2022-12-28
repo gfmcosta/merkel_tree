@@ -21,6 +21,6 @@ public class Main {
         mt.add("G");
         mt.replace(1, "P");
         mt.remove(3);
-        mt.show();
+        System.out.print(mt.show());
     }
 }
