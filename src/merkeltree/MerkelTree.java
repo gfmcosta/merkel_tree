@@ -12,17 +12,8 @@ import java.util.Collections;
  * @author gonca
  */
 public class MerkelTree {
-    
-    /**
-     *
-     */
     public ArrayList<String> elements;
-
-    /**
-     *
-     */
     public ArrayList<ArrayList<String>> tree;
-     
     /**
      * Constructor
      */
@@ -65,36 +56,11 @@ public class MerkelTree {
     * @param e   the caracter to add
     */ 
     public void add(String e){
-        ArrayList<ArrayList<String>> tree2= new ArrayList<>();
         elements.add(e);
         e = hash(e);
         //adiciona um numero novo
         tree.get(0).add(e);
         
-        tree2.add(tree.get(0));
-            for(ArrayList a:tree)
-                if(a.size()>=2){
-                    tree2.add(new ArrayList<>());
-                    for (int i=0; i<a.size();i=i+2){
-                        int size=0;
-                        try{
-                            if(tree2.size()-2<0)
-                            {
-                                size=0;
-                            }else{
-                                size=tree2.size();
-                            }
-                            
-                            tree2.get(size-1).add(hash(tree.get(size-2).get(i)+tree.get(size-2).get(i+1)));
-                        }catch(java.lang.IndexOutOfBoundsException ex){
-                            tree2.get(size-1).add(hash(tree.get(size-2).get(i)));
-                        }
-                    }
-                }
-        
-        this.tree=tree2;
-        
-        //rever com o prof
         for (int i = 0; i < tree.size(); i++){
             reorganiza();
         }
